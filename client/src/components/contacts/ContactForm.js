@@ -5,7 +5,6 @@ import { useAuth0 } from '../../auth/react-auth0';
 const ContactForm = () => {
   const contactContext = useContext(ContactContext);
   const { getIdTokenClaims } = useAuth0();
-
   const { addContact, updateContact, clearCurrent, current } = contactContext;
 
   useEffect(() => {
@@ -96,17 +95,6 @@ const ContactForm = () => {
         onChange={onChange}
       />{' '}
       Professional
-      <div>
-        <label for="img">Select image:</label>
-        <input
-          style={{marginLeft:'16px'}}
-          type="file"
-          id="img"
-          name="img"
-          accept="image/*"
-          onChange={onChange}
-        />
-      </div>
       <div>
         <input
           type="submit"
