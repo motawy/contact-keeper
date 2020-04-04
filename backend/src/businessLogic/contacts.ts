@@ -2,7 +2,7 @@
 import * as uuid from 'uuid';
 import { ContactItem } from '../models/ContactItem';
 import { ContactsAccess } from '../dataLayer/contactsAccess';
-import { CreateContactRequest } from '../requests/CreateContactRequest';
+import { ContactRequest } from '../requests/ContactRequest';
 import { createLogger } from '../utils/logger';
 // import { UpdateContactRequest } from '../requests/UpdateContactRequest';
 const logger = createLogger("business-logic")
@@ -20,16 +20,16 @@ export async function getContacts(userId: string): Promise<ContactItem[]> {
     return await contactsAccess.getContacts(userId);
 }
 
-export async function createContact(createContactRequest: CreateContactRequest, userID: string, ): Promise<ContactItem> {
+export async function createContact(createdContact: ContactRequest, userID: string, ): Promise<ContactItem> {
     logger.info("Create contact request.")
     const contact: ContactItem = {
         userId: userID,
         contactId: uuid.v4(),
         createdAt: new Date().toISOString(),
-        name: createContactRequest.name,
-        email: createContactRequest.email,
-        phone: createContactRequest.phone,
-        type: createContactRequest.type
+        name: createdContact.name,
+        email: createdContact.email,
+        phone: createdContact.phone,
+        type: createdContact.type
     }
     logger.info(contact)
     return await contactsAccess.createContact(contact);
@@ -39,9 +39,17 @@ export async function deleteContact(contactId: string, userId: string): Promise<
     return await contactsAccess.deleteContact(contactId, userId)
 }
 
-// export async function updateTodo(todoID: string, UpdateContactRequest: UpdateContactRequest, createdAt:string): Promise<void> {
-//     return await postsAccess.updateTodo(updatedContact, todoID, createdAt)
-// }
+export async function updateContact(updatedContact: ContactRequest, contactId: string, userId: string): Promise<ContactItem> {
+    const contact: ContactItem = {
+        userId: userId,
+        contactId: contactId,
+        name: updatedContact.name,
+        email: updatedContact.email,
+        phone: updatedContact.phone,
+        type: updatedContact.type
+    }
+    return await contactsAccess.updateContact(contact, contactId, userId)
+}
 
 // export async function setAttachmentUrl(todoId: string, imageId: string, createdAt: string): Promise<void> {
 //     const imageUrl = `https://${bucketName}.s3.amazonaws.com/${imageId}`

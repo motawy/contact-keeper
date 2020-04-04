@@ -32,6 +32,9 @@ custom:
       - name: CreateContactRequest
         contentType: application/json
         schema: ${file(models/create-contact-request.json)}
+      - name: UpdateContactRequest
+        contentType: application/json
+        schema: ${file(models/updatecontact-request.json)}
 
 functions:
   Auth:
@@ -53,7 +56,7 @@ functions:
     handler: src/lambda/http/createContact.handler
     events:
       - http:
-          method: post 
+          method: post
           path: contacts
           cors: true
           authorizer: Auth
@@ -68,8 +71,8 @@ functions:
       - Effect: Allow
         Action: dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
-  DeleteTodo:
-    tracing: true
+  DeleteContact:
+    # tracing: true
     # iamRoleStatementsInherit: true
     handler: src/lambda/http/deleteContact.handler
     events:
@@ -78,10 +81,31 @@ functions:
           path: contacts/{contactId}
           cors: true
           authorizer: Auth
-    iamRoleStatementsName: ${self:service.name}-delete-contact-role-${self:provider.stage}
+    iamRoleStatementsName: ${self:service.name}-delete-contacts-role-${self:provider.stage}
     iamRoleStatements:
       - Effect: Allow
         Action: dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
+  UpdateContact:
+    # tracing: true
+    # iamRoleStatementsInherit: true
+    handler: src/lambda/http/updateContact.handler
+    events:
+      - http:
+          method: patch
+          path: contacts/{contactId}
+          cors: true
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Update a contact
+            description: Update a contact
+            requestModels:
+              "application/json": UpdateContactRequest
+    iamRoleStatementsName: ${self:service.name}-update-contacts-role-${self:provider.stage}
+    iamRoleStatements:
+      - Effect: Allow
+        Action: dynamodb:UpdateItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
 
 resources:
