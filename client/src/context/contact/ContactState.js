@@ -72,15 +72,22 @@ const ContactState = (props) => {
   };
 
   // Delete Contact
-  const deleteContact = async (id) => {
+  const deleteContact = async (id, token) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
     try {
-      await axios.delete(`${apiEndpoint}/contacts/${id}`);
-
+      await axios.delete(`${apiEndpoint}/contacts/${id}`, config);  
       dispatch({
         type: DELETE_CONTACT,
         payload: id,
       });
     } catch (err) {
+      console.log(err);
+      
       dispatch({
         type: CONTACT_ERROR,
         payload: err.response.msg,
