@@ -83,7 +83,6 @@ export default (state, action) => {
     case UPLOAD_IMAGE:
       console.log(action.payload);
       return {
-        
         ...state,
         contacts: state.contacts.map((contact) =>
           contact.contactId === action.payload.contactId

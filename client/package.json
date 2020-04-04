@@ -1,7 +1,8 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "private": true,
+  "license": "MIT",
+  "author": "Mohammed Tantawy",
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.6.5",
     "axios": "^0.19.2",
