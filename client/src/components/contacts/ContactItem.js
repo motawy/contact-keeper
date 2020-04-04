@@ -10,7 +10,7 @@ const ContactItem = ({ contact }) => {
   const contactContext = useContext(ContactContext);
   const { deleteContact, setCurrent, clearCurrent } = contactContext;
   const { getIdTokenClaims } = useAuth0();
-  const { contactId, name, email, phone, type, image } = contact;
+  const { contactId, name, email, phone, type, attachmentUrl } = contact;
 
   const [file, setfile] = useState();
 
@@ -44,7 +44,7 @@ const ContactItem = ({ contact }) => {
   const onChange = (e) => {
     const files = e.target.files;
     if (!files) return;
-    setfile(files);
+    setfile(files[0]);
   };
 
   const onUpload = async () => {
@@ -56,7 +56,7 @@ const ContactItem = ({ contact }) => {
 
   return (
     <div className="card bg-light">
-      {!image ? (
+      {!attachmentUrl ? (
         <div>
           <Avatar
             style={{ display: 'flex', margin: 'auto' }}
@@ -78,7 +78,7 @@ const ContactItem = ({ contact }) => {
       ) : (
         <Avatar
           style={{ display: 'flex', margin: 'auto' }}
-          src={image}
+          src={attachmentUrl}
           size="100"
           round={true}
         />
