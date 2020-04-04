@@ -97,6 +97,17 @@ const ContactForm = () => {
       />{' '}
       Professional
       <div>
+        <label for="img">Select image:</label>
+        <input
+          style={{marginLeft:'16px'}}
+          type="file"
+          id="img"
+          name="img"
+          accept="image/*"
+          onChange={onChange}
+        />
+      </div>
+      <div>
         <input
           type="submit"
           value={current ? 'Update Contact' : 'Add Contact'}

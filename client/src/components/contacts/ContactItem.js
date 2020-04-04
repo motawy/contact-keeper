@@ -2,14 +2,15 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import ContactContext from '../../context/contact/contactContext';
 import { useAuth0 } from '../../auth/react-auth0';
+import Avatar from 'react-avatar';
 
 const ContactItem = ({ contact }) => {
   const contactContext = useContext(ContactContext);
   const { deleteContact, setCurrent, clearCurrent } = contactContext;
   const { getIdTokenClaims } = useAuth0();
-  const { contactId, name, email, phone, type } = contact;
+  const { contactId, name, email, phone, type, image } = contact;
 
-  const onDelete = async() => {
+  const onDelete = async () => {
     const rawToken = await getIdTokenClaims();
     const token = rawToken.__raw;
     deleteContact(contactId, token);
@@ -18,6 +19,21 @@ const ContactItem = ({ contact }) => {
 
   return (
     <div className="card bg-light">
+      {!image ? (
+        <Avatar
+          style={{ display: 'flex', margin: 'auto' }}
+          name={name}
+          size="100"
+          round={true}
+        />
+      ) : (
+        <Avatar
+          style={{ display: 'flex', margin: 'auto' }}
+          src={image}
+          size="100"
+          round={true}
+        />
+      )}
       <h3 className="text-primary text-left">
         {name}{' '}
         <span
