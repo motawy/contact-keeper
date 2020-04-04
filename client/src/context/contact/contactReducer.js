@@ -9,6 +9,7 @@ import {
   CLEAR_FILTER,
   CONTACT_ERROR,
   CLEAR_CONTACTS,
+  UPLOAD_IMAGE,
 } from '../types';
 
 export default (state, action) => {
@@ -78,6 +79,18 @@ export default (state, action) => {
       return {
         ...state,
         error: action.payload,
+      };
+    case UPLOAD_IMAGE:
+      console.log(action.payload);
+      return {
+        
+        ...state,
+        contacts: state.contacts.map((contact) =>
+          contact.contactId === action.payload.contactId
+            ? action.payload
+            : contact
+        ),
+        loading: false,
       };
     default:
       return state;

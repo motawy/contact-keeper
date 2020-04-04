@@ -14,6 +14,7 @@ import {
   CLEAR_CONTACTS,
   CLEAR_FILTER,
   CONTACT_ERROR,
+  UPLOAD_IMAGE,
 } from '../types';
 
 const ContactState = (props) => {
@@ -122,6 +123,32 @@ const ContactState = (props) => {
     }
   };
 
+  const uploadImage = async (token, contact, file) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const uploadRequest = await axios.post(
+      `${apiEndpoint}/contacts/${contact.contactId}/attachment`,
+      '',
+      config
+    );
+    const { uploadUrl } = uploadRequest.data;
+    const attachmentUrl = uploadUrl.split('?')[0]
+    const res = await axios.put(uploadUrl, file);
+    console.log(res);
+    const payload = {
+      ...contact,
+      attachmentUrl: attachmentUrl,
+    };
+    dispatch({
+      type: UPLOAD_IMAGE,
+      payload: payload,
+    });
+  };
+
   // Clear Contacts
   const clearContacts = () => {
     dispatch({ type: CLEAR_CONTACTS });
@@ -162,7 +189,8 @@ const ContactState = (props) => {
         filterContacts,
         clearFilter,
         getContacts,
-        clearContacts
+        clearContacts,
+        uploadImage,
       }}
     >
       {props.children}

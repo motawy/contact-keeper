@@ -3,36 +3,18 @@ import PropTypes from 'prop-types';
 import ContactContext from '../../context/contact/contactContext';
 import { useAuth0 } from '../../auth/react-auth0';
 import Avatar from 'react-avatar';
-import axios from 'axios';
-import { apiEndpoint } from '../../utils/config';
 
 const ContactItem = ({ contact }) => {
   const contactContext = useContext(ContactContext);
-  const { deleteContact, setCurrent, clearCurrent } = contactContext;
+  const {
+    deleteContact,
+    setCurrent,
+    clearCurrent,
+    uploadImage,
+  } = contactContext;
   const { getIdTokenClaims } = useAuth0();
   const { contactId, name, email, phone, type, attachmentUrl } = contact;
-
   const [file, setfile] = useState();
-
-  const getUploadUrl = async (token, contactId) => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    try {
-      const res = await axios.post(
-        `${apiEndpoint}/contacts/${contactId}/attachment`,
-        '',
-        config
-      );
-      console.log(res);
-      return res.data.uploadUrl
-    } catch (err) {
-      alert(err);
-    }
-  };
 
   const onDelete = async () => {
     const rawToken = await getIdTokenClaims();
@@ -50,29 +32,33 @@ const ContactItem = ({ contact }) => {
   const onUpload = async () => {
     const rawToken = await getIdTokenClaims();
     const token = rawToken.__raw;
-    const uploadUrl = await getUploadUrl(token, contactId);
-    await axios.put(uploadUrl, file);
+    try {
+      await uploadImage(token, contact, file);
+      alert('Image uploaded.');
+    } catch (error) {
+      console.error('Error during the upload of the image: ' + error);
+    }
   };
 
   return (
     <div className="card bg-light">
       {!attachmentUrl ? (
-        <div>
-          <Avatar
-            style={{ display: 'flex', margin: 'auto' }}
-            name={name}
-            size="100"
-            round={true}
-          />
+        <div style={{ display: 'flex', justifyContent: 'between' }}>
+          <Avatar name={name} size="100" round={true} />
           <input
-            style={{ marginLeft: '16px' }}
+            style={{ margin: 'auto', padding: '16px' }}
             type="file"
             name="attachmentUrl"
             accept="image/*"
             onChange={onChange}
           />
-          <button type="button" onClick={onUpload}>
-            Upload photo
+          <button
+            style={{ borderRadius: '25px', height: '30px', margin: 'auto' }}
+            className="btn btn-primary btn-sm"
+            type="button"
+            onClick={onUpload}
+          >
+            Upload
           </button>
         </div>
       ) : (
