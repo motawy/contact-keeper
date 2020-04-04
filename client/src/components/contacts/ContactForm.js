@@ -44,7 +44,7 @@ const ContactForm = () => {
     if (current === null) {
       addContact(token, contact);
     } else {
-      updateContact(contact);
+      updateContact(token, contact);
     }
     clearAll();
   };

@@ -80,14 +80,14 @@ const ContactState = (props) => {
       },
     };
     try {
-      await axios.delete(`${apiEndpoint}/contacts/${id}`, config);  
+      await axios.delete(`${apiEndpoint}/contacts/${id}`, config);
       dispatch({
         type: DELETE_CONTACT,
         payload: id,
       });
     } catch (err) {
       console.log(err);
-      
+
       dispatch({
         type: CONTACT_ERROR,
         payload: err.response.msg,
@@ -96,23 +96,23 @@ const ContactState = (props) => {
   };
 
   // Update Contact
-  const updateContact = async (contact) => {
+  const updateContact = async (token, contact) => {
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     };
 
     try {
-      const res = await axios.put(
-        `${apiEndpoint}/contacts/${contact._id}`,
+      const res = await axios.patch(
+        `${apiEndpoint}/contacts/${contact.contactId}`,
         contact,
         config
       );
-
       dispatch({
         type: UPDATE_CONTACT,
-        payload: res.data,
+        payload: res.data.contact,
       });
     } catch (err) {
       dispatch({
