@@ -1,6 +1,5 @@
 import * as AWS from 'aws-sdk'
 import { ContactItem } from '../models/ContactItem'
-import { ContactRequest } from '../requests/ContactRequest'
 //import { UpdateContactRequest } from '../requests/UpdateContactRequest'
 //const AWSXRay = require('aws-xray-sdk')
 // const XAWS = AWSXRay.captureAWS(AWS)
@@ -66,21 +65,21 @@ export class ContactsAccess {
         return updatedContact;
     }
 
-    // async setAttachmentUrl(todoId: string, attachmentUrl: string, createdAt: string): Promise<void> {
-    //     this.docClient
-    //         .update({
-    //             TableName: this.todosTable,
-    //             Key: {
-    //                 "todoId": todoId,
-    //                 "createdAt": createdAt
-    //             },
-    //             UpdateExpression: 'set attachmentUrl = :attachmentUrl',
-    //             ExpressionAttributeValues: {
-    //                 ':attachmentUrl': attachmentUrl,
-    //             },
-    //             ReturnValues: 'UPDATED_NEW',
-    //         })
-    //         .promise();
-    // }
+    async setAttachmentUrl(contactId: string, userId: string, attachmentUrl: string): Promise<void> {
+        this.docClient
+            .update({
+                TableName: this.contactsTable,
+                Key: {
+                    "contactId": contactId,
+                    "userId": userId
+                },
+                UpdateExpression: 'set attachmentUrl = :attachmentUrl',
+                ExpressionAttributeValues: {
+                    ':attachmentUrl': attachmentUrl,
+                },
+                ReturnValues: 'UPDATED_NEW',
+            })
+            .promise();
+    }
 }
 

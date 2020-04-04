@@ -1,20 +1,20 @@
-// import * as AWS from 'aws-sdk'
+import * as AWS from 'aws-sdk'
 import * as uuid from 'uuid';
 import { ContactItem } from '../models/ContactItem';
 import { ContactsAccess } from '../dataLayer/contactsAccess';
 import { ContactRequest } from '../requests/ContactRequest';
 import { createLogger } from '../utils/logger';
 // import { UpdateContactRequest } from '../requests/UpdateContactRequest';
-const logger = createLogger("business-logic")
 // const AWSXRay = require('aws-xray-sdk')
 // const XAWS = AWSXRay.captureAWS(AWS)
+const logger = createLogger("business-logic")
 const contactsAccess = new ContactsAccess();
 
-// const bucketName = process.env.S3_BUCKET
-// const urlExpiration = process.env.SIGNED_URL_EXPIRATION
-// const s3 = new XAWS.S3({
-//     signatureVersion: 'v4'
-// })
+const bucketName = process.env.S3_BUCKET
+const urlExpiration = process.env.SIGNED_URL_EXPIRATION
+const s3 = new AWS.S3({
+    signatureVersion: 'v4'
+})
 
 export async function getContacts(userId: string): Promise<ContactItem[]> {
     return await contactsAccess.getContacts(userId);
@@ -51,17 +51,16 @@ export async function updateContact(updatedContact: ContactRequest, contactId: s
     return await contactsAccess.updateContact(contact, contactId, userId)
 }
 
-// export async function setAttachmentUrl(todoId: string, imageId: string, createdAt: string): Promise<void> {
-//     const imageUrl = `https://${bucketName}.s3.amazonaws.com/${imageId}`
-//     return await postsAccess.setAttachmentUrl(todoId, imageUrl, createdAt)
-// }
+export async function setAttachmentUrl(contactId: string, userId: string, imageId: string): Promise<void> {
+    const imageUrl = `https://${bucketName}.s3.amazonaws.com/${imageId}`
+    return await contactsAccess.setAttachmentUrl(contactId, userId, imageUrl)
+}
 
-// export async function getUploadUrl(imageId: string): Promise<string> {
-//     const attachmentUrl = await s3.getSignedUrl('putObject', {
-//         Bucket: bucketName,
-//         Key: imageId,
-//         Expires: parseInt(urlExpiration)
-//     })
-//     return attachmentUrl;
-// }
-
+export function getUploadUrl(imageId: string): string {
+    const attachmentUrl = s3.getSignedUrl('putObject', {
+        Bucket: bucketName,
+        Key: imageId,
+        Expires: parseInt(urlExpiration)
+    })
+    return attachmentUrl;
+}
