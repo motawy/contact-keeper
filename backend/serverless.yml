@@ -6,6 +6,8 @@ plugins:
   - serverless-reqvalidator-plugin
   - serverless-aws-documentation
   - serverless-iam-roles-per-function
+  - serverless-plugin-tracing
+
 
 provider:
   name: aws
@@ -19,6 +21,12 @@ provider:
     INDEX_NAME: userIDIndex
     S3_BUCKET: ${self:service.name}-contacts-s3-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - xray:PutTelemetryRecords
+        - xray:PutTraceSegments
+      Resource: "*"
 
 custom:
   webpack:
@@ -40,8 +48,12 @@ custom:
 
 functions:
   Auth:
+    tracing: true
+    iamRoleStatementsInherit: true
     handler: src/lambda/auth/auth0Authorizer.handler
   GetContacts:
+    tracing: true
+    iamRoleStatementsInherit: true
     handler: src/lambda/http/getContacts.handler
     events:
       - http:
@@ -55,6 +67,8 @@ functions:
         Action: dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
   CreateContact:
+    tracing: true
+    iamRoleStatementsInherit: true
     handler: src/lambda/http/createContact.handler
     events:
       - http:
@@ -74,8 +88,8 @@ functions:
         Action: dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
   DeleteContact:
-    # tracing: true
-    # iamRoleStatementsInherit: true
+    tracing: true
+    iamRoleStatementsInherit: true
     handler: src/lambda/http/deleteContact.handler
     events:
       - http:
@@ -89,8 +103,8 @@ functions:
         Action: dynamodb:DeleteItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
   UpdateContact:
-    # tracing: true
-    # iamRoleStatementsInherit: true
+    tracing: true
+    iamRoleStatementsInherit: true
     handler: src/lambda/http/updateContact.handler
     events:
       - http:
@@ -110,8 +124,8 @@ functions:
         Action: dynamodb:UpdateItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
   GenerateUploadUrl:
-    # tracing: true
-    # iamRoleStatementsInherit: true
+    tracing: true
+    iamRoleStatementsInherit: true
     handler: src/lambda/http/generateUploadUrl.handler
     events:
       - http:

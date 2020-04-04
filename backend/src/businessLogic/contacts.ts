@@ -4,15 +4,14 @@ import { ContactItem } from '../models/ContactItem';
 import { ContactsAccess } from '../dataLayer/contactsAccess';
 import { ContactRequest } from '../requests/ContactRequest';
 import { createLogger } from '../utils/logger';
-// import { UpdateContactRequest } from '../requests/UpdateContactRequest';
-// const AWSXRay = require('aws-xray-sdk')
-// const XAWS = AWSXRay.captureAWS(AWS)
+const AWSXRay = require('aws-xray-sdk')
+const XAWS = AWSXRay.captureAWS(AWS)
 const logger = createLogger("business-logic")
 const contactsAccess = new ContactsAccess();
 
 const bucketName = process.env.S3_BUCKET
 const urlExpiration = process.env.SIGNED_URL_EXPIRATION
-const s3 = new AWS.S3({
+const s3 = new XAWS.S3({
     signatureVersion: 'v4'
 })
 

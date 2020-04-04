@@ -1,12 +1,11 @@
 import * as AWS from 'aws-sdk'
 import { ContactItem } from '../models/ContactItem'
-//import { UpdateContactRequest } from '../requests/UpdateContactRequest'
-//const AWSXRay = require('aws-xray-sdk')
-// const XAWS = AWSXRay.captureAWS(AWS)
+const AWSXRay = require('aws-xray-sdk')
+const XAWS = AWSXRay.captureAWS(AWS)
 
 export class ContactsAccess {
     constructor(
-        private readonly docClient: AWS.DynamoDB.DocumentClient = new AWS.DynamoDB.DocumentClient(),
+        private readonly docClient: AWS.DynamoDB.DocumentClient = new XAWS.DynamoDB.DocumentClient(),
         private readonly contactsTable: string = process.env.CONTACTS_TABLE
     ) { }
 
