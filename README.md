@@ -4,7 +4,7 @@ Serverless Contact Keeper using AWS
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Simple project with mimimal installation of dependencies for client. As the backend is hosted and managed by AWS using the Serverless framework you need only to run and install the client.
 
 ### Installing
 
@@ -28,12 +28,8 @@ Explain how to run the automated tests for this system
 
 * [Create-React-App](https://create-react-app.dev) - Create React App
 * [Serverless](https://serverless.com) - Serverless Framework with node and typescript
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [AWS](https://aws.amazon.com) - Used for services 
 
 ## Authors
 
-* **Mohammed Tantawy** - [MoTawy](https://github.com/motawy)
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+* **Mohammed Tantawy** - [motawy](https://github.com/motawy)
